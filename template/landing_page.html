@@ -1,0 +1,59 @@
+{% extends "header.html" %}
+{% load static %}
+{% block title %} UN - Job Connect {% endblock %}
+{% block homeactive %}active{% endblock homeactive %}
+
+{% block style %}
+<style>
+  img.image-fluid.landing {
+    width: 60vh;
+    margin: 20px;
+
+  }
+
+  @media (min-width: 576px) {
+    img.image-fluid.landing {
+      width: 70vh;
+      margin: 20px;
+
+    }
+  }
+
+  \\ Medium devices (tablets, 768px and up) @media (min-width: 768px) {
+    img.image-fluid.landing {
+      width: 45vh;
+      margin: 100vh;
+
+    }
+  }
+
+  \\ Large devices (desktops, 992px and up) @media (min-width: 992px) {}
+
+  \\ X-Large devices (large desktops, 1200px and up) @media (min-width: 1200px) {}
+</style>
+{% endblock style %}
+
+{% block main %}
+<div class="row">
+  <div class="col-md-6 order-md-1 order-2">
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-9 fw-bold">Welcome to NU Job Connect</h1>
+        <p class="fs-9">A web app designed to help Northumbria University student with various tech skills to
+          earn
+          through jobs made avaliable on the platform.</p>
+        <a href="/" class="d-flex justify-content-start link-body-emphasis text-decoration-none">
+          <button class="btn btn-primary btn-lg align-items-right" type="button">Get Started</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 order-md-2 order-1 d-flex">
+    <img src="{% static 'northumbria_university.jpeg' %}" alt="" srcset="" class="image-fluid landing justify-content-center">
+  </div>
+</div>
+{% endblock main %}
+
+{% block footer %}
+{% include "footer.html" %}
+{% endblock footer %}
