@@ -10,4 +10,5 @@ urlpatterns = [
     path("admin_signup", job.admin_signup, name="adminsignup"),
     path('student_login', job.student_login, name="studentlogin"),
     path('student_signup', job.student_signup, name="studentsignup"),
+    path('job_list', job.job_list_post, name="joblistpost"),
 ]

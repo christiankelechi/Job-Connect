@@ -13,9 +13,13 @@
         {% block title %}title{% endblock %}
     </title>
     <style>
-        {% block style %}
-          
-        {% endblock style %}
+        {
+            % block style %
+        }
+
+            {
+            % endblock style %
+        }
     </style>
 </head>
 
@@ -25,7 +29,8 @@
             <div class="container-fluid">
                 <a href="/"
                     class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none navbar-brand">
-                    <img class="bi me-2 mb-2" src="{% static 'logo.png' %}" alt="" width="30" height="30" sizes="" srcset="">
+                    <img class="bi me-2 mb-2" src="{% static 'logo.png' %}" alt="" width="30" height="30" sizes=""
+                        srcset="">
                     <span class="fs-7 fs-md-6 fs-lg-4">NU-JOB CONNECT</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -38,7 +43,6 @@
                         <a href="{% url 'landingpage' %}" class="nav-link {% block homeactive %} {% endblock %}"
                             aria-current="page">Home</a></li>
                         <a href="{% url 'aboutus' %}" class="nav-link {% block usactive %} {% endblock %}">About Us</a>
-                        </li>
                         <a href="#" class="nav-link {% block studentactive %} {% endblock %}">Student</a>
                         <a href="#" class="nav-link {% block recuritactive %} {% endblock %}">Recuriter</a>
                         <a href="#" class="nav-link {% block listedactive %} {% endblock %}">Listed
