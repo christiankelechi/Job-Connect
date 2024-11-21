@@ -15,6 +15,7 @@
             <h2>Welcome Back</h2>
             <p>Welcome back to UN - Job Connect</p>
             <form id="main-form" method="post" action="#" class="">
+                    {% csrf_token %}
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -26,7 +27,7 @@
                         </svg>
                     </span>
                     <input type="text" class="form-control" placeholder="Enter your Name" aria-label="Input with image"
-                        aria-describedby="basic-addon1">
+                        aria-describedby="basic-addon1" name="full_name">
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
@@ -37,7 +38,7 @@
                         </svg>
                     </span>
                     <input type="email" class="form-control" placeholder="Enter your Email here"
-                        aria-label="Input with image" aria-describedby="basic-addon1">
+                        aria-label="Input with image" aria-describedby="basic-addon1" name="email">
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
@@ -48,7 +49,7 @@
                         </svg>
                     </span>
                     <input type="tel" class="form-control" placeholder="Enter your Phone Number"
-                        aria-label="Input with image" aria-describedby="basic-addon1">
+                        aria-label="Input with image" aria-describedby="basic-addon1" name="phone_number">
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
@@ -59,7 +60,7 @@
                         </svg>
                     </span>
                     <input type="text" class="form-control" placeholder="Enter your Student ID"
-                        aria-label="Input with image" aria-describedby="basic-addon1">
+                        aria-label="Input with image" aria-describedby="basic-addon1" name="student_id">
                 </div>
                 <div class="mb-3 d-flex">
                     <label class="form-label px-3">Gender: </label>
@@ -85,7 +86,7 @@
                         </svg>
                     </span>
                     <input type="password" class="form-control" placeholder="Enter your Password"
-                        aria-label="Input with image" aria-describedby="basic-addon1">
+                        aria-label="Input with image" aria-describedby="basic-addon1" name="password">
                 </div>
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1">
@@ -96,7 +97,7 @@
                         </svg>
                     </span>
                     <input type="password" class="form-control" placeholder="Confirm your Password"
-                        aria-label="Input with image" aria-describedby="basic-addon1">
+                        aria-label="Input with image" aria-describedby="basic-addon1" name="confirm_password">
                 </div>
                 <div class="input-group mb-3 d-flex justify-content-center">
                     <button class="d-flex btn btn-outline-primary justify-content-center px-5" type="Submit">Signup
