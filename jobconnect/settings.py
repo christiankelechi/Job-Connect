@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core_root_api',
+    'core_root_api.job_api',
     # 'core_root_api.security',
     'core_root_api.security.auth',
     'core_root_api.security.user',
