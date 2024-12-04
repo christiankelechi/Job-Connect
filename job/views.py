@@ -190,6 +190,10 @@ def student_profile(request):
 def admin_profile(request):
     return render(request, "job/admin_profile.html")
 
+"""
+    START OF THE STUDENT PART
+"""
+
 def student_dashboard(requests):
     context= {
         "applied_jobs": json.dumps(jobs),
@@ -198,8 +202,6 @@ def student_dashboard(requests):
     }
     return render(requests, "dashboard/student_dashboard.html", context)
 
-def company_dashboard(requests):
-    return render(requests, "dashboard/company_dashboard.html")
 
 def applied_job(requests, job_id):
     if not (single := [i for i in jobs if i['pk'] == job_id]):
@@ -237,3 +239,40 @@ def withdraw_application(request, job_id):
         return render(request, "job/withdraw_application.html", content)
     else:
         return redirect('studentdashboard')
+
+"""
+    END OF THE STUDENT SECTION
+"""
+
+"""
+    START OF THE COMPANY ADMIN SECTION
+"""
+def company_dashboard(requests):
+    return render(requests, "dashboard/company_dashboard.html", {'jobs':jobs})
+
+def post_job(request, job_id=None):
+    if job_id:
+        if not (single := [i for i in jobs if i['pk'] == job_id]):
+            return redirect('landingpage')
+        job = single[0]
+        form_title = "Edit Job Post"
+    else:
+        job = None
+        form_title = "Create Job Post"
+    
+    if request.method == 'POST':
+        return redirect('job-list')
+    context = {
+        'form_title': form_title,
+        'job': job
+    }
+    return render(request, 'dashboard/company/job_management.html', context)
+
+def job_applications(request, job_id=None):
+    # if not (single := [i for i in jobs if i['pk'] == job_id]):
+    #     return redirect('landingpage')
+    # job = single[0]
+    # context = {
+    #     'job': job,
+    # }
+    return render(request, 'dashboard/company/job_applications.html', )
