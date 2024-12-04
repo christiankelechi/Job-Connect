@@ -13,7 +13,6 @@ from core_root_api.security import base_url
 import datetime
 import time
 import platform
-import winsound
 
 class LoginViewSet(viewsets.ModelViewSet):
     serializer_class = LoginSerializerClass
@@ -56,7 +55,6 @@ from core_root_api.security import base_url
 import datetime
 import time
 import platform
-import winsound
 increment=0
 
 class LoginViewSet(viewsets.ModelViewSet):

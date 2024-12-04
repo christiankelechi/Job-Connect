@@ -1,20 +1,31 @@
 #!/usr/bin/env python3fr
-from django.urls import path
+from rest_framework.routers import DefaultRouter
+from django.urls import path, include
 import job.views as job
 
+router = DefaultRouter()
+router.register("/jobs", job.JobsViewSet, basename="jobviewset")
+
 urlpatterns = [
+    path("student", include(router.urls)),
     path("", job.landing_page, name="landingpage"),
     path("about-us", job.about_us, name="aboutus"),
-    path('contact_us', job.contact_us, name="contactus"),
-    path("admin_login", job.admin_login, name="adminlogin"),
-    path('job_list', job.job_list_post, name="joblistpost"),
-    path("admin_signup", job.admin_signup, name="adminsignup"),
-    path('student_login', job.student_login, name="studentlogin"),
-    path('student_signup', job.student_signup, name="studentsignup"),
+    path('contact-us', job.contact_us, name="contactus"),
+    path("admin-login", job.admin_login, name="adminlogin"),
+    path('job-list', job.job_list_post, name="joblistpost"),
+    path("admin-signup", job.admin_signup, name="adminsignup"),
+    path("admin-profile", job.admin_profile, name="adminprofile"),
+    path('student-login', job.student_login, name="studentlogin"),
+    path("apply-job/<str:job_id>", job.apply_job, name="apply-job"),
+    path('student-signup', job.student_signup, name="studentsignup"),
+    path("reset-password", job.reset_password, name="resetpassword"),
+    path("change-password", job.change_password, name="changepassword"),
+    path("student-profile", job.student_profile, name="studentprofile"),
+    path("company-profile", job.company_profile, name="companyprofile"),
     path("single-job/<str:primary_key>", job.job_single, name="singlejob"),
-    path("reset_password", job.reset_password, name="resetpassword"),
-    path("change_password", job.change_password, name="changepassword"),
-    path("admin_profile", job.admin_profile, name="adminprofile"),
-    path("student_profile", job.student_profile, name="studentprofile"),
-    path("company_profile", job.company_profile, name="companyprofile")
+    path("student-dashboard", job.student_dashboard, name="studentdashboard"),
+    path("company-dashboard", job.company_dashboard, name="companydashboard"),
+    path("student/job/saved/<str:job_id>", job.detailed_saved_job, name="detailedsavedjob"),
+    path("successful-submission/<str:job_id>", job.successful_submission, name="submit-application"),
 ]
+

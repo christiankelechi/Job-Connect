@@ -1,10 +1,12 @@
-from django.core.paginator import Paginator
+from rest_framework import viewsets, status, response, decorators
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
+from django.http import HttpResponse
+from core_root_api import api_url
+import requests
 import datetime
 import uuid
-import requests
-from core_root_api import api_url
-# Create your views here.
+
 jobs = [ 
         dict(
             pk=str(uuid.uuid4()),
@@ -34,7 +36,46 @@ jobs = [
         ),
         dict(
             pk=str(uuid.uuid4()),
-            title="mobile App Developer needed in Binance",
+            title="mobile App Developer ",
+            details="Binance is looking for senior mobile app developer with at least 10 years of experience building cross platform application with flutter, firebase and react native. The role is also remote based and also  willing to attend yearly meeting at binance head quarters in your country",
+            opening=10,
+            salary="50k - 100K Monthly",
+            place="USA",
+            time=datetime.date.fromisoformat("2024-04-24").isoformat(),
+            image_url="jobs/job_5.jpeg",
+            app_date=datetime.datetime.now(),
+            last_date=datetime.datetime.now(),
+            company_name="Microsoft"
+        ),
+        dict(
+            pk=str(uuid.uuid4()),
+            opening=30,
+            title="software Engineer", 
+            details="Experienced in Node.Js, Java, Spring, Bootstrap, Python and Selenium integration and Unit Testing",
+            salary="26K - 30k Monthly",
+            place='Poland',
+            time=datetime.date.fromisoformat("2024-04-24").isoformat(),
+            image_url="jobs/job_1.jpeg",
+            app_date=datetime.datetime.now(),
+            last_date=datetime.datetime.now(),
+            company_name="Microsoft"
+        ),
+        dict(
+            pk=str(uuid.uuid4()),
+            title="mobile App Engineer",
+            details="Experienced in Flutter or React native for uilding a startup app",
+            opening=10,
+            salary="8k - 10K Monthly",
+            place="USA",
+            time=datetime.date.fromisoformat("2024-04-24").isoformat(),
+            image_url="jobs/job_2.jpeg",
+            app_date=datetime.datetime.now(),
+            last_date=datetime.datetime.now(),
+            company_name="Microsoft"
+        ),
+        dict(
+            pk=str(uuid.uuid4()),
+            title="mobile App Developer ",
             details="Binance is looking for senior mobile app developer with at least 10 years of experience building cross platform application with flutter, firebase and react native. The role is also remote based and also  willing to attend yearly meeting at binance head quarters in your country",
             opening=10,
             salary="50k - 100K Monthly",
@@ -46,6 +87,22 @@ jobs = [
             company_name="Microsoft"
         ),
     ]
+jobs.append(
+    {
+        "pk": uuid.uuid4(),
+        "title": "Software Developer",
+        "company_name": "XYZ Corp",
+        "place": "Remote",
+        "app_date": "2024-12-01",
+        "details": "We are looking for a skilled software developer to join our team...",
+        "requirements": [
+            "Proficiency in Python and Django",
+            "Experience with REST APIs",
+            "Knowledge of front-end technologies (HTML, CSS, JavaScript)"
+        ],
+        "additional_info": "Flexible work hours and remote-friendly environment."
+    }
+)
 
 def landing_page(request):
     return render(request, "landing_page.html")
@@ -102,7 +159,7 @@ def job_list_post(request):
     pages = Paginator(jobs, length)
     page_number = request.GET.get("page", 1)
     page_obj = pages.get_page(page_number)
-    context = {'jobs': jobs[(int(page_number)*length)-length: (int(page_number)*length)], 'page_obj': page_obj}
+    context = {'jobs': jobs[(int(page_number)*length)-length: (int(page_number)*length)], 'page_obj': page_obj, "leav": "this is it"}
     if query := request.GET.get("query"):
         context['query'] = query
     print(jobs, end="\n\n")
@@ -130,3 +187,69 @@ def student_profile(request):
 
 def admin_profile(request):
     return render(request, "job/admin_profile.html")
+
+def student_dashboard(requests):
+    return render(requests, "dashboard/student_dashboard.html")
+
+def company_dashboard(requests):
+    return render(requests, "dashboard/company_dashboard.html")
+
+def student_applied_job(requests):
+    global jobs
+    content = {'jobs': jobs, "leav": "this is it"}
+    return render(requests, "dashboard/student/applied_job.html", content)
+
+def detailed_saved_job(request, job_id):
+    job = {
+        "id": job_id,
+        "title": "Software Developer",
+        "company": "XYZ Corp",
+        "location": "Remote",
+        "posted_date": "2024-12-01",
+        "description": "We are looking for a skilled software developer to join our team...",
+        "requirements": [
+            "Proficiency in Python and Django",
+            "Experience with REST APIs",
+            "Knowledge of front-end technologies (HTML, CSS, JavaScript)"
+        ],
+        "additional_info": "Flexible work hours and remote-friendly environment."
+    }
+    return render(request, 'dashboard/student/detailed_saved_job.html', {"job": job})
+
+"""
+    Section for job application
+"""
+
+def apply_job(requests, job_id):
+    return render(requests, "job/applied_job.html")
+
+
+def successful_submission(requests, job_id):
+    return render(requests, "job/successful_submission.html")
+
+class JobsViewSet(viewsets.ViewSet):
+    
+    permission_classes = []
+    
+    @decorators.action(methods=["GET"], detail=False, url_path="get-applied-jobs", name="getappliedjobs")
+    def get_applied_jobs(self, requests, *args, **kwargs):
+        """
+        Method for getting the jobs the user have applied for
+        """
+        return response.Response(jobs, status=status.HTTP_200_OK)
+    
+    @decorators.action(methods=["GET"], detail=False, url_path="get-saved-jobs", name="getsavedjobs")
+    def get_saved_jobs(self, requests, *args, **kwargs):
+        """
+            Method for getting all the saved jobs of the user. Applied and not applied
+        """
+        return response.Response(jobs, status=status.HTTP_200_OK)
+    
+    @decorators.action(methods=["GET"], detail=False, url_path="get-recommended-jobs", name="getrecommendedjobs")
+    def get_recommended_jobs(self, requests, *args, **kwargs):
+        """
+            Method for retrieving the recommended job of a user
+        """
+        return response.Response(jobs, status=status.HTTP_200_OK)
+    
+    

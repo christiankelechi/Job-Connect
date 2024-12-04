@@ -1,0 +1,204 @@
+{% extends "header.html" %}
+{% block title %} UN - Job Connect: Student Dashboard {% endblock %}
+{% block listedactive %}active{% endblock %}
+
+{% block style %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .job-list-container,
+    .recommended-job-container,
+    .saved-job-container {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .job-list-container::-webkit-scrollbar,
+    .recommended-job-container::-webkit-scrollbar,
+    .saved-job-container::-webkit-scrollbar {
+        height: 1px;
+        display: none;
+    }
+
+    .job-list-container::-webkit-scrollbar-thumb,
+    .recommended-job-container::-webkit-scrollbar-thumb,
+    .saved-job-container::-webkit-scrollbar-thumb {
+        background-color: #6c757d;
+        border-radius: 2px;
+        display: none;
+    }
+
+    .job-list-container::-webkit-scrollbar-track,
+    .recommended-job-container::-webkit-scrollbar-track,
+    .saved-job-container::-webkit-scrollbar-track {
+        background-color: #e9ecef;
+        display: none;
+    }
+
+    .job-card,
+    .saved-card {
+        flex: 0 0 auto;
+        /* Prevent shrinking or growing */
+        width: 300px;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: white;
+        border-radius: 5px;
+    }
+
+    .job-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+</style>
+{% endblock style %}}
+
+{% block main %}
+<div class="content">
+    <div class="container-fluid">
+        <!-- Welcome Banner -->
+        <div class="row">
+            <div class="col-12 my-5">
+                <h3>Welcome, Student</h3>
+                <p>Here are your latest updates and opportunities.</p>
+            </div>
+        </div>
+
+        <!-- Dashboard Sections -->
+        <!-- Saved Jobs -->
+        <div class="mb-4">
+            <div class=" mb-4">
+                <div class="container content">
+                    <h1 class="mb-4">Saved Jobs </h1>
+                    <p>You have saved 4 Jobs.</p>
+                    <div id="saved-job" class="saved-job-container"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Job Applications -->
+        <div class=" mb-4">
+            <div class="container content">
+                <h1 class="mb-4">Job Applications </h1>
+                <p>You have 2 active applications.</p>
+                <div id="job-list" class="job-list-container"></div>
+            </div>
+        </div>
+
+        <!-- Recommended Jobs -->
+        <div class=" mb-4">
+            <div class=" mb-4">
+                <div class="container content">
+                    <h1 class="mb-4">Recommended Jobs</h1>
+                    <p>Jobs that match your profile.</p>
+                    <div id="recommended-job" class="recommended-job-container"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock main %}
+
+{% block script %}
+<script>
+
+    const savedJobs = () => {
+        const savedJobList = document.getElementById('saved-job');
+        fetch("{% url 'jobviewset-get-saved-jobs'%}", {
+            method: "GET"
+        }).then(data => data.json()).then(aved => {
+            aved.forEach(saved => {
+                const saved_card = document.createElement("div");
+                saved_card.classList.add("card", "saved-card");
+                saved_card.innerHTML = `
+                <img src="static/${saved.image_url}" alt="${saved.company_name} Logo">
+                <a href="${window.location.origin}/apply-job/${saved.pk}" class="text-decoration-none text-black">
+                <div class="card-body text-black">
+                        <h5 class="card-title">${saved.title}</h5>
+                        <p class="card-text">
+                            Company: ${saved.company}<br>
+                        </p>
+                    </div>
+                </a>
+                `;
+                savedJobList.appendChild(saved_card);
+            })
+        })
+    }
+
+    const recommendedJobs = () => {
+        const recommendedJobList = document.getElementById('recommended-job');
+        fetch("{% url 'jobviewset-get-recommended-jobs'%}", {
+            method: "GET"
+        }).then(data => data.json()).then(saved => {
+            saved.forEach(cardre => {
+                const recommended = document.createElement("div");
+                recommended.classList.add("card", "saved-card");
+                recommended.innerHTML = `
+                <img src="static/${cardre.image_url}" alt="${cardre.company_name} Logo">
+                <a href="${window.location.origin}/apply-job/${saved.pk}" class="text-decoration-none text-black">
+                    <div class="card-body text-black">
+                        <h5 class="card-title">${cardre.title}</h5>
+                        <p class="card-text">
+                            Company: ${cardre.company}<br>
+                        </p>
+                    </div>
+                </a>
+                `;
+                recommendedJobList.appendChild(recommended);
+            })
+        })
+    }
+
+    function appliedJobs() {
+        const jobList = document.getElementById('job-list');
+        fetch("{% url 'jobviewset-get-applied-jobs' %}", {
+            method: "GET"
+        }).then(data => data.json()).then(jobs => {
+
+            jobs.forEach(job => {
+                const card = document.createElement('div');
+                card.classList.add('card', 'job-card');
+                card.innerHTML = `
+                    <img src="static/${job.image_url}" alt="${job.company_name} Logo">
+                    <a href="${window.location.origin}/apply-job/${job.pk}" class="text-decoration-none text-black">
+                        <div class="card-body text-black">
+                            <h5 class="card-title">${job.title}</h5>
+                            <p class="card-text">
+                                Company: ${job.company}<br>
+                                Status: ${job.status}
+                            </p>
+                        </div>
+                    </a>
+            `;
+                jobList.appendChild(card);
+            });
+        })
+    }
+    document.addEventListener("DOMContentLoaded", appliedJobs());
+    document.addEventListener("DOMContentLoaded", recommendedJobs());
+    document.addEventListener("DOMContentLoaded", savedJobs());
+</script>
+{% endblock script %}
+
+{% block footer %}
+{% include "footer.html" %}
+{% endblock footer %}
