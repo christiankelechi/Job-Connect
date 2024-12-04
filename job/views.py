@@ -6,6 +6,7 @@ from core_root_api import api_url
 import requests
 import datetime
 import uuid
+import json
 
 jobs = [ 
         dict(
@@ -17,9 +18,10 @@ jobs = [
             place='Poland',
             time=datetime.date.fromisoformat("2024-04-24").isoformat(),
             image_url="jobs/job_1.jpeg",
-            app_date=datetime.datetime.now(),
-            last_date=datetime.datetime.now(),
-            company_name="Microsoft"
+            app_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            last_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            company_name="Microsoft",
+            status="rejected"
         ),
         dict(
             pk=str(uuid.uuid4()),
@@ -30,9 +32,10 @@ jobs = [
             place="USA",
             time=datetime.date.fromisoformat("2024-04-24").isoformat(),
             image_url="jobs/job_2.jpeg",
-            app_date=datetime.datetime.now(),
-            last_date=datetime.datetime.now(),
-            company_name="Microsoft"
+            app_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            last_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            company_name="Microsoft",
+            status="pending"
         ),
         dict(
             pk=str(uuid.uuid4()),
@@ -43,9 +46,10 @@ jobs = [
             place="USA",
             time=datetime.date.fromisoformat("2024-04-24").isoformat(),
             image_url="jobs/job_5.jpeg",
-            app_date=datetime.datetime.now(),
-            last_date=datetime.datetime.now(),
-            company_name="Microsoft"
+            app_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            last_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            company_name="Microsoft",
+            status="accepted"
         ),
         dict(
             pk=str(uuid.uuid4()),
@@ -56,8 +60,8 @@ jobs = [
             place='Poland',
             time=datetime.date.fromisoformat("2024-04-24").isoformat(),
             image_url="jobs/job_1.jpeg",
-            app_date=datetime.datetime.now(),
-            last_date=datetime.datetime.now(),
+            app_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            last_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
             company_name="Microsoft"
         ),
         dict(
@@ -69,8 +73,8 @@ jobs = [
             place="USA",
             time=datetime.date.fromisoformat("2024-04-24").isoformat(),
             image_url="jobs/job_2.jpeg",
-            app_date=datetime.datetime.now(),
-            last_date=datetime.datetime.now(),
+            app_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            last_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
             company_name="Microsoft"
         ),
         dict(
@@ -82,14 +86,14 @@ jobs = [
             place="USA",
             time=datetime.date.fromisoformat("2024-04-24").isoformat(),
             image_url="jobs/job_5.jpeg",
-            app_date=datetime.datetime.now(),
-            last_date=datetime.datetime.now(),
+            app_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
+            last_date=datetime.datetime.now().strftime("%d-%m-%y %H:%M:%S"),
             company_name="Microsoft"
         ),
     ]
 jobs.append(
     {
-        "pk": uuid.uuid4(),
+        "pk": str(uuid.uuid4()),
         "title": "Software Developer",
         "company_name": "XYZ Corp",
         "place": "Remote",
@@ -162,15 +166,13 @@ def job_list_post(request):
     context = {'jobs': jobs[(int(page_number)*length)-length: (int(page_number)*length)], 'page_obj': page_obj, "leav": "this is it"}
     if query := request.GET.get("query"):
         context['query'] = query
-    print(jobs, end="\n\n")
     return render(request, "job/job_list.html", context)
 
 def job_single(request, primary_key):
-    print(jobs, end="\n\n")
     if not (single := [i for i in jobs if i['pk'] == primary_key]):
         return redirect('landingpage')
     single = single[0]
-    return render(request, "job/single_job.html", context={'single':single})
+    return render(request, 'dashboard/student/detailed_saved_job.html', context={'job':single})
 
 def reset_password(request):
     return render(request, "auth/reset_password.html")
@@ -189,32 +191,28 @@ def admin_profile(request):
     return render(request, "job/admin_profile.html")
 
 def student_dashboard(requests):
-    return render(requests, "dashboard/student_dashboard.html")
+    context= {
+        "applied_jobs": json.dumps(jobs),
+        "recommended_jobs": json.dumps(jobs),
+        "saved_jobs": json.dumps(jobs)
+    }
+    return render(requests, "dashboard/student_dashboard.html", context)
 
 def company_dashboard(requests):
     return render(requests, "dashboard/company_dashboard.html")
 
-def student_applied_job(requests):
-    global jobs
-    content = {'jobs': jobs, "leav": "this is it"}
+def applied_job(requests, job_id):
+    if not (single := [i for i in jobs if i['pk'] == job_id]):
+        return redirect('landingpage')
+    single = single[0]
+    content = {'job': single, "leav": "this is it"}
     return render(requests, "dashboard/student/applied_job.html", content)
 
 def detailed_saved_job(request, job_id):
-    job = {
-        "id": job_id,
-        "title": "Software Developer",
-        "company": "XYZ Corp",
-        "location": "Remote",
-        "posted_date": "2024-12-01",
-        "description": "We are looking for a skilled software developer to join our team...",
-        "requirements": [
-            "Proficiency in Python and Django",
-            "Experience with REST APIs",
-            "Knowledge of front-end technologies (HTML, CSS, JavaScript)"
-        ],
-        "additional_info": "Flexible work hours and remote-friendly environment."
-    }
-    return render(request, 'dashboard/student/detailed_saved_job.html', {"job": job})
+    if not (single := [i for i in jobs if i['pk'] == job_id]):
+        return redirect('landingpage')
+    single = single[0]
+    return render(request, 'dashboard/student/detailed_saved_job.html', {"job": single})
 
 """
     Section for job application
@@ -227,29 +225,15 @@ def apply_job(requests, job_id):
 def successful_submission(requests, job_id):
     return render(requests, "job/successful_submission.html")
 
-class JobsViewSet(viewsets.ViewSet):
+def withdraw_application(request, job_id):
     
-    permission_classes = []
-    
-    @decorators.action(methods=["GET"], detail=False, url_path="get-applied-jobs", name="getappliedjobs")
-    def get_applied_jobs(self, requests, *args, **kwargs):
-        """
-        Method for getting the jobs the user have applied for
-        """
-        return response.Response(jobs, status=status.HTTP_200_OK)
-    
-    @decorators.action(methods=["GET"], detail=False, url_path="get-saved-jobs", name="getsavedjobs")
-    def get_saved_jobs(self, requests, *args, **kwargs):
-        """
-            Method for getting all the saved jobs of the user. Applied and not applied
-        """
-        return response.Response(jobs, status=status.HTTP_200_OK)
-    
-    @decorators.action(methods=["GET"], detail=False, url_path="get-recommended-jobs", name="getrecommendedjobs")
-    def get_recommended_jobs(self, requests, *args, **kwargs):
-        """
-            Method for retrieving the recommended job of a user
-        """
-        return response.Response(jobs, status=status.HTTP_200_OK)
-    
-    
+    if request.method == 'POST':
+        return redirect('studentdashboard')
+    elif request.method == "GET":
+        if not (single := [i for i in jobs if i['pk'] == job_id]):
+            return redirect('landingpage')
+        single = single[0]
+        content = {'job': single}
+        return render(request, "job/withdraw_application.html", content)
+    else:
+        return redirect('studentdashboard')

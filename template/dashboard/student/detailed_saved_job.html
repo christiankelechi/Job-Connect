@@ -1,6 +1,6 @@
 {% extends "header.html" %}
 {% block title %} UN - Job Connect: Detailed Job {% endblock %}
-{% block usactive %}active{% endblock %}
+{% block listedactive %}active{% endblock %}
 
 {% block style %}
 <style>
@@ -76,16 +76,16 @@
         <!-- Job Header -->
         <div class="job-header">
             <h1>{{ job.title }}</h1>
-            <p><strong>Company:</strong> {{ job.company }}</p>
-            <p><strong>Location:</strong> {{ job.location }}</p>
-            <p><strong>Posted:</strong> {{ job.posted_date }}</p>
+            <p><strong>Company:</strong> {{ job.company_name }}</p>
+            <p><strong>Location:</strong> {{ job.place }}</p>
+            <p><strong>Posted:</strong> {{ job.app_date }}</p>
         </div>
 
         <!-- Job Details -->
         <div class="card job-details-card">
             <div class="card-body">
                 <h4>Job Description</h4>
-                <p>{{ job.description }}</p>
+                <p>{{ job.details }}</p>
 
                 <h4>Requirements</h4>
                 <ul>
@@ -101,7 +101,7 @@
 
         <!-- Apply Section -->
         <div class="apply-section">
-            <a href="{% url 'apply-job' job.id %}" class="apply-btn">Apply Now</a>
+            <a href="{% url 'apply-job' job.pk %}" class="apply-btn">Apply Now</a>
         </div>
     </div>
 </div>
