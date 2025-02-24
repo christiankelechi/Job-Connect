@@ -1,0 +1,22 @@
+{
+    "builds": [
+      {
+        "src": "jobconnect/wsgi.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "jobconnect/wsgi.py",
+        "methods": [
+          "GET",
+          "POST",
+          "PUT",
+          "PATCH",
+          "DELETE",
+          "OPTIONS"
+      ]
+      }
+    ]
+}
