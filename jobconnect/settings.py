@@ -99,18 +99,18 @@ WSGI_APPLICATION = 'jobconnect.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'defaultdb',
-#         'USER': 'avnadmin',
-#         'PASSWORD': 'AVNS_WM5Rgau4XIlMQp3bcQn',
-#         'HOST': 'expressjobconnect-expressjobconnect.h.aivencloud.com',
-#         'PORT': 16545
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'defaultdb',
+        'USER': 'avnadmin',
+        'PASSWORD': 'AVNS_WM5Rgau4XIlMQp3bcQn',
+        'HOST': 'expressjobconnect-expressjobconnect.h.aivencloud.com',
+        'PORT': 16545
 
-# ,
-#     }
-# }
+,
+    }
+}
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
     'rest_framework.permissions.IsAuthenticated',
